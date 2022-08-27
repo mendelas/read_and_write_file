@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'dart:math';//path名をランダムにするために使用
+
 final ioProvider = ChangeNotifierProvider.autoDispose<IoController>(
       (ref) => IoController(),
 );
 
 
+
 class IoController extends ChangeNotifier {
   IoController(){
     /// 初期化処理をここに書く
-
     /// コンストラクタで非同期処理をやりたい場合どうすのがいいんでしょう？
         Future(() async {
       content = 'ファイルに書き込まれた時間を表示します';
@@ -41,16 +43,25 @@ class IoController extends ChangeNotifier {
     return directory.path;
   }
 
+  var _randomStr;
   /// 現在時刻の書き込み
   Future<void> write() async {
-    final file = File('$appPath/test.txt');
+    //pathの文字列のランダム生成
+    const characters = 'abcdefghijklmnopqrstuvwxyz';
+    var random = Random();
+    _randomStr = String.fromCharCodes(Iterable.generate(
+        5, (_) => characters.codeUnitAt(random.nextInt(characters.length))
+    ));
+
+    final file = File('$appPath/$_randomStr');
     print('write: ${file.path}');
     await file.writeAsString(DateTime.now().toString());
   }
 
   /// 現在時刻の読み込み
   Future<void> read() async {
-    final file = File('$appPath/test.txt');
+
+    final file = File('$appPath/$_randomStr');
     content = await file.readAsString();
     notifyListeners();
   }
