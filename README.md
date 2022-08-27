@@ -6,7 +6,7 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
-"https://zenn.dev/pressedkonbu/articles/flutter-file-io"
+"https://zenn.dev/pressedkonbu/articles/flutter-file-io" is refered
 
 A few resources to get you started if this is your first Flutter project:
 
