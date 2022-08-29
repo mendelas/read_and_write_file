@@ -50,7 +50,7 @@ class IoController extends ChangeNotifier {
     const characters = 'abcdefghijklmnopqrstuvwxyz';
     var random = Random();
     _randomStr = String.fromCharCodes(Iterable.generate(
-        5, (_) => characters.codeUnitAt(random.nextInt(characters.length))
+        15, (_) => characters.codeUnitAt(random.nextInt(characters.length))
     ));
 
     final file = File('$appPath/$_randomStr');

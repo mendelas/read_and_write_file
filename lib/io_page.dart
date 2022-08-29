@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'io_controller.dart';
 
+
 void main(){//変更箇所20220827
   runApp(
     ProviderScope(
@@ -15,6 +16,7 @@ void main(){//変更箇所20220827
 class IoPage extends ConsumerWidget {
   const IoPage({Key? key}) : super(key: key);
   static const String title = '外部データの入出力';
+  static const List<String> items = [];
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _ioProvider = ref.watch(ioProvider);
@@ -50,6 +52,14 @@ class IoPage extends ConsumerWidget {
                       onPressed: () async {
                         await _ioProvider.write();
                         await _ioProvider.read();
+                        ListView.builder(
+                          itemCount: items.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(_ioProvider.content),
+                            );
+                          },
+                        );
                       },
                       child: const Text('いまの時間を書き込む'),
                     ),
