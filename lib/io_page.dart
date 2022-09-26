@@ -6,8 +6,8 @@ import 'io_controller.dart';
 
 void main(){//変更箇所20220827
   runApp(
-    ProviderScope(
-        child: const IoPage(),///https://zenn.dev/junki555/articles/17382e2862c46b
+    const ProviderScope(
+        child: IoPage(),///https://zenn.dev/junki555/articles/17382e2862c46b
     ),
   );
 }
@@ -16,7 +16,7 @@ void main(){//変更箇所20220827
 class IoPage extends ConsumerWidget {
   const IoPage({Key? key}) : super(key: key);
   static const String title = '外部データの入出力';
-  static const List<String> items = [];
+  static const items = <String>[];
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _ioProvider = ref.watch(ioProvider);
@@ -25,50 +25,64 @@ class IoPage extends ConsumerWidget {
         primaryColor: Colors.white,
       ),
       home: Scaffold(
-            appBar: AppBar(
+            /*appBar: AppBar(
               title: const Text(
                 title,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Text('アプリのローカルパス: \n${_ioProvider.appPath}'),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: SizedBox(
-                        height: 25,
-                        child: FittedBox(
-                          fit: BoxFit.fitHeight,
-                          child: Text(
-                            _ioProvider.content,
-                          ),
-                        )),
-                  ),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await _ioProvider.write();
-                        await _ioProvider.read();
-                        ListView.builder(
-                          itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(_ioProvider.content),
-                            );
-                          },
-                        );
-                      },
-                      child: const Text('いまの時間を書き込む'),
-                    ),
+            ),*/
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  /*title: Text(
+                    title,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),*/
 
-                  ),
-                ],
-              ),
+                  floating: true,
+                  flexibleSpace: Placeholder(),
+                  expandedHeight: 200,
+                  actions: [
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Text('アプリのローカルパス: \n${_ioProvider.appPath}'),
+
+                          Padding(
+                            padding: EdgeInsets.all(16),
+                            child: SizedBox(
+                                height: 10,
+                                child: FittedBox(
+                                  fit: BoxFit.fitHeight,
+                                  child: Text(
+                                    _ioProvider.content,
+                                  ),
+                                )),
+                          ),
+                          Center(
+                            child:ElevatedButton(
+                              onPressed: () async {
+                                await _ioProvider.write();
+                                await _ioProvider.read();
+                              },
+                              child: Text('いまの時間を書き込む'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                SliverList(delegate: SliverChildBuilderDelegate(
+                      (context, index) => ListTile(title: Text('Item #$index')),
+                  childCount: 1000,
+                ),
+                ),
+              ]
             ),
-          ),
-      );
+            ),
+          );
   }
 }
