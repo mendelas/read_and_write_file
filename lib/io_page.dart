@@ -16,7 +16,8 @@ void main(){//変更箇所20220827
 class IoPage extends ConsumerWidget {
   const IoPage({Key? key}) : super(key: key);
   static const String title = '外部データの入出力';
-  static const items = <String>[];
+  //static const items = <String>[];
+  static const double _appBarBottomBtnPosition = 0.0;//change this value to position your button vertically
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _ioProvider = ref.watch(ioProvider);
@@ -42,42 +43,54 @@ class IoPage extends ConsumerWidget {
                   floating: true,
                   flexibleSpace: Placeholder(),
                   expandedHeight: 200,
-                  actions: [
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Text('アプリのローカルパス: \n${_ioProvider.appPath}'),
 
-                          Padding(
-                            padding: EdgeInsets.all(16),
-                            child: SizedBox(
-                                height: 10,
+                  actions: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'アプリのローカルパス: \n${_ioProvider.appPath}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 8,
+                              overflow: TextOverflow.ellipsis,//いい感じに折り返してくれる．．．できてないけど
+                            ),
+                          ),
+                          SizedBox(
+                                height: 25,
                                 child: FittedBox(
                                   fit: BoxFit.fitHeight,
                                   child: Text(
                                     _ioProvider.content,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                      overflow: TextOverflow.ellipsis,//いい感じに折り返してくれる
+                                    ),
                                   ),
                                 )),
-                          ),
-                          Center(
-                            child:ElevatedButton(
-                              onPressed: () async {
-                                await _ioProvider.write();
-                                await _ioProvider.read();
-                              },
-                              child: Text('いまの時間を書き込む'),
-                            ),
-                          ),
                         ],
                       ),
-                    ),
                   ],
+                  bottom: PreferredSize(
+                    preferredSize: const Size.fromHeight(0.0),
+                    child: Transform.translate(
+                      offset: const Offset(0, _appBarBottomBtnPosition),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await _ioProvider.write();
+                          await _ioProvider.read();
+                        },
+                        child: Text('いまの時間を書き込む'),
+                      ),
+                    ),
+                  ),
                 ),
 
                 SliverList(delegate: SliverChildBuilderDelegate(
-                      (context, index) => ListTile(title: Text('Item #$index')),
-                  childCount: 1000,
+                      (context, index) => ListTile(title: Text(
+                          'Item #$index ${_ioProvider.content}',
+                      )),
                 ),
                 ),
               ]
